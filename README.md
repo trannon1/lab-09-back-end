@@ -17,7 +17,7 @@ This application is to create a website that uses google map apis to create an a
 
 ## Architecture
 <!-- Provide a detailed description of the application design. What technologies (languages, libraries, etc) you're using, and any other relevant design information. -->
-This app uses cors, express, and dotenv as dependencies. The language used for code is HTML, CSS, and JavaScript.
+This app uses cors, express, superagent, and dotenv as dependencies. The language used for code is HTML, CSS, and JavaScript.
 
 ## Change Log
 <!-- Use this area to document the iterative changes made to your application as each feature is successfully implemented. Use time stamps. Here's an examples:
@@ -27,13 +27,18 @@ This app uses cors, express, and dotenv as dependencies. The language used for c
 12/10/2019 10:44am - Application has been deployed to Heroku
 12/10/2019 11:10am - Functionality added to server.js for location search
 12/10/2019 11:46am - Functionality added to server.js for weather forecast
+12/12/2019 2:00pm - Functionality added to server.js for event search
+12/13/2019 10:00am - Added database and functionality
+12/13/2019 11:00am - Functionality added to server.js for movie search
+12/13/2019 12:00pm - Functionality added to server.js for yelp search
+12/13/2019 1:00pm - Modularized code
 
 ## Credits and Collaborations
 <!-- Give credit (and a link) to other people or resources that helped you build this application. -->
 
 Number and name of feature: Feature #1: Location Search
 
-Estimate of time needed to complete: 1 hours
+Estimate of time needed to complete: 1 hour
 
 Start time: 10:44am
 
@@ -44,10 +49,65 @@ Actual time needed to complete: 24 minutes
 
 Number and name of feature: Feature #2: Weather Forecast
 
-Estimate of time needed to complete: 1 hours
+Estimate of time needed to complete: 1 hour
 
 Start time: 11:09am
 
 Finish time: 11:45am
 
 Actual time needed to complete: 36 minutes
+
+
+Number and name of feature: Feature #3: Event Search
+
+Estimate of time needed to complete: 1 hour
+
+Start time: 9:00am
+
+Finish time: 2:00pm
+
+Actual time needed to complete: 5 hours
+
+
+Number and name of feature: Feature #4: SQL Databse
+
+Estimate of time needed to complete: 1 hour
+
+Start time: 9:00am
+
+Finish time: 10:00am
+
+Actual time needed to complete: 1 hour
+
+
+Number and name of feature: Feature #5: Movie Name
+
+Estimate of time needed to complete: 1 hour
+
+Start time: 10:00am
+
+Finish time: 11:00am
+
+Actual time needed to complete: 1 hour
+
+
+Number and name of feature: Feature #6: Yelp Restaurant
+
+Estimate of time needed to complete: 1 hours
+
+Start time: 11:00am
+
+Finish time: 12:00pm
+
+Actual time needed to complete: 1 hour
+
+
+Number and name of feature: Feature #7: Modularize
+
+Estimate of time needed to complete: 1 hour
+
+Start time: 12:00pm
+
+Finish time: 1:00pm
+
+Actual time needed to complete: 1 hour
