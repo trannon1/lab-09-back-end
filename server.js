@@ -10,20 +10,12 @@ app.use(cors());
 
 const client = require('./lib/client');
 const getLocation = require('./lib/location/getLocation');
+const getWeather = require('./lib/weather/getWeather');
 
 // routes
 app.get('/location', getLocation);
 
-app.get('/weather', (request, response) => {
-  try{
-    getWeather(request, response);
-  }
-  catch(error){
-    console.error(error); // will turn the error message red if the environment supports it
-
-    response.status(500).send('so sorry, something is not working on our end');
-  }
-})
+app.get('/weather', getWeather);
 
 app.get('/events', (request, response) => {
   try{
@@ -57,24 +49,6 @@ app.get('/yelp', (request, response) => {
     response.status(500).send('so sorry, something is not working on our end');
   }
 })
-
-function getWeather(request, response){
-  let latitude = request.query.data.latitude;
-  let longitude = request.query.data.longitude;
-
-  let url =  `https://api.darksky.net/forecast/${process.env.DARKSKYKEY}/${latitude},${longitude}`;
-
-  superagent.get(url)
-  .then(results => {
-    const weatherObject = results.body.daily.data.map(values => 
-      new Weather(values.summary, values.time)
-    )
-    response.send(weatherObject);
-  })
-  .catch (err =>{
-    response.send(err);
-  })
-}
 
 function getEvent(request, response){
   let latitude = request.query.data.latitude;
@@ -124,7 +98,6 @@ function getYelp(request, response){
     const yelpObject = results.body.businesses.map(value => 
       new Yelp(value)
     )
-    console.log(yelpObject);
     response.send(yelpObject);
   })
   .catch (err =>{
