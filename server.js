@@ -12,18 +12,7 @@ const client = require('./lib/client');
 const getLocation = require('./lib/location/getLocation');
 
 // routes
-
 app.get('/location', getLocation);
-// app.get('/location', (request, response) => {
-//   try{
-//     searchLatToLong(request, response);
-//   }
-//   catch(error){
-//     console.error(error); // will turn the error message red if the environment supports it
-
-//     response.status(500).send('so sorry, something is not working on our end');
-//   }
-// })
 
 app.get('/weather', (request, response) => {
   try{
@@ -47,55 +36,27 @@ app.get('/events', (request, response) => {
   }
 })
 
-// app.get('/add', (request, response) => {
-  
-//   let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${request.query.data}&key=${process.env.GEOKEY}`;
+app.get('/movies', (request, response) => {
+  try{
+    getMovie(request, response);
+  }
+  catch(error){
+    console.error(error); // will turn the error message red if the environment supports it
 
-//   superagent.get(url)
-//     .then(results => {
-      
-//       const locationObject = new Location(request.query.data, results.body.results[0]);
-    
-//       let sql = `INSERT INTO location (search_query, formatted_address, latitude, longitude) VALUES (${locationObject.search_query}, ${locationObject.formatted_address}, ${locationObject.latitude}, ${locationObject.longitude});`;
+    response.status(500).send('so sorry, something is not working on our end');
+  }
+})
 
-//       let safeValues = [request.query.data];
+app.get('/yelp', (request, response) => {
+  try{
+    getYelp(request, response);
+  }
+  catch(error){
+    console.error(error); // will turn the error message red if the environment supports it
 
-//     })
-//     .catch (err => {
-//       response.send(err);
-//     })
-  
-//   let safeValues = [request.query.data];
-
-//   client.query(sql, safeValues)
-
-
-//   // check the database
-//   let sql = 'SELECT * FROM location;';
-//   let safeValues = ['Seattle'];
-
-//   client.query(sql, safeValues)
-//     .then(results => {
-//       console.log(results);
-//     })
-// })
-
-// function searchLatToLong(request, response){
-
-//   let url = `https://maps.googleapis.com/maps/api/geocode/json?address=${request.query.data}&key=${process.env.GEOKEY}`;
-
-//   superagent.get(url)
-//     .then(results => {
-      
-//       const locationObject = new Location(request.query.data, results.body.results[0]);
-
-//       response.send(locationObject);
-    
-//     })
-//     .catch (err => {
-//       response.send(err);
-//     })
-// }
+    response.status(500).send('so sorry, something is not working on our end');
+  }
+})
 
 function getWeather(request, response){
   let latitude = request.query.data.latitude;
@@ -134,12 +95,42 @@ function getEvent(request, response){
   })
 }
 
-// function Location(request, geoData){
-//   this.search_query = request;
-//   this.formatted_query = geoData.formatted_address;
-//   this.latitude = geoData.geometry.location.lat;
-//   this.longitude = geoData.geometry.location.lng;
-// }
+function getMovie(request, response){
+
+  let query = request.query.data.search_query;
+  let url = `https://api.themoviedb.org/3/search/movie?api_key=${process.env.MOVIEKEY}&query=${query}`;
+
+  superagent.get(url)
+  .then(results => {
+    const movieObject = results.body.results.map(value => 
+      new Movie(value)
+    )
+    response.send(movieObject);
+  })
+  .catch (err =>{
+    response.send(err);
+  })
+}
+
+function getYelp(request, response){
+  let latitude = request.query.data.latitude;
+  let longitude = request.query.data.longitude;
+
+  let url = `https://api.yelp.com/v3/businesses/search?latitude=${latitude}&longitude=${longitude}`;
+
+
+  superagent.get(url).set('Authorization', `Bearer ${process.env.YELPKEY}`)
+  .then(results => {
+    const yelpObject = results.body.businesses.map(value => 
+      new Yelp(value)
+    )
+    console.log(yelpObject);
+    response.send(yelpObject);
+  })
+  .catch (err =>{
+    response.send(err);
+  })
+}
 
 function Weather(summary, time){
   this.forecast = summary;
@@ -151,6 +142,24 @@ function Event(value){
   this.name = value.title;
   this.event_date = value.start_time;
   this.summary = value.description;
+}
+
+function Movie(value){
+  this.title = value.title;
+  this.overview = value.overview;
+  this.average_votes = value.vote_average;
+  this.total_votes = value.vote_count;
+  this.image_url = value.poster_path;
+  this.popularity = value.popularity;
+  this.released_on = value.release_date;
+}
+
+function Yelp(value){
+  this.name = value.name;
+  this.image_url = value.image_url;
+  this.price = value.price;
+  this.rating = value.rating;
+  this.url = value.url;
 }
 
 app.get('*', (request, response) => {
