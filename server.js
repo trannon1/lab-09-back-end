@@ -11,22 +11,14 @@ app.use(cors());
 const client = require('./lib/client');
 const getLocation = require('./lib/location/getLocation');
 const getWeather = require('./lib/weather/getWeather');
+const getEvent = require('./lib/event/getEvent');
 
 // routes
 app.get('/location', getLocation);
 
 app.get('/weather', getWeather);
 
-app.get('/events', (request, response) => {
-  try{
-    getEvent(request, response);
-  }
-  catch(error){
-    console.error(error); // will turn the error message red if the environment supports it
-
-    response.status(500).send('so sorry, something is not working on our end');
-  }
-})
+app.get('/events', getEvent);
 
 app.get('/movies', (request, response) => {
   try{
@@ -49,25 +41,6 @@ app.get('/yelp', (request, response) => {
     response.status(500).send('so sorry, something is not working on our end');
   }
 })
-
-function getEvent(request, response){
-  let latitude = request.query.data.latitude;
-  let longitude = request.query.data.longitude;
-
-  let url =  `http://api.eventful.com/json/events/search?app_key=${process.env.EVENTBRITEKEY}&where=${latitude},${longitude}`;
-
-  superagent.get(url)
-  .then(results => {
-    let events = JSON.parse(results.text);
-    const eventObject = events.events.event.map(value => 
-      new Event(value)
-    )
-    response.send(eventObject);
-  })
-  .catch (err =>{
-    response.send(err);
-  })
-}
 
 function getMovie(request, response){
 
@@ -103,18 +76,6 @@ function getYelp(request, response){
   .catch (err =>{
     response.send(err);
   })
-}
-
-function Weather(summary, time){
-  this.forecast = summary;
-  this.time = new Date(time * 1000).toDateString();
-}
-
-function Event(value){
-  this.link = value.url;
-  this.name = value.title;
-  this.event_date = value.start_time;
-  this.summary = value.description;
 }
 
 function Movie(value){
