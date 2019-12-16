@@ -1,4 +1,5 @@
--DROP TABLE IF EXISTS location;
+-- Bryan Tran
+DROP TABLE IF EXISTS location;
 
 CREATE TABLE location (
     id SERIAL PRIMARY KEY,
